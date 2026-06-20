@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0F1F3D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SEOGuru">
+<link rel="manifest" href="manifest.json">
+<title>SEO Guru — Digital Marketing Blog</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0F1F3D; --blue: #1B4FD8; --sky: #E8EFFF;
+    --grey-dark: #2D3748; --grey-mid: #718096; --grey-light: #F7F8FC;
+    --white: #FFFFFF; --accent: #FF6B35; --border: #E2E8F0;
+    --green: #22C55E; --red: #EF4444;
+    --bg: #FFFFFF; --text: #2D3748; --card-bg: #FFFFFF;
+    --card-border: #E2E8F0; --section-bg: #F7F8FC;
+  }
+  [data-theme="dark"] {
+    --bg: #0D1117; --text: #E6EDF3; --card-bg: #161B22;
+    --card-border: #30363D; --section-bg: #161B22;
+    --grey-dark: #E6EDF3; --grey-mid: #8B949E; --grey-light: #161B22;
+    --white: #0D1117; --border: #30363D; --sky: #1C2333;
+  }
+  body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+  body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--grey-dark); }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 64px; box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+  .logo { color: var(--white); font-size: 1.4rem; font-weight: 800; cursor: pointer; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: white; }
+  .nav-right { display: flex; gap: 0.6rem; align-items: center; }
+  .nav-cta { background: var(--accent); color: white; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; }
+  .admin-nav-btn { background: rgba(255,255,255,0.15); color: white; padding: 7px 14px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.3); display: none; }
+  .dark-toggle { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 7px 12px; border-radius: 6px; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+  .dark-toggle:hover { background: rgba(255,255,255,0.25); }
+  /* PWA Install Button */
+  .pwa-install-btn { display: none; position: fixed; bottom: 140px; right: 16px; background: var(--blue); color: white; border: none; border-radius: 12px; padding: 10px 16px; font-size: 0.82rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(27,79,216,0.4); z-index: 100; }
+  .pwa-install-btn.show { display: block; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: white; border-radius: 2px; }
+  .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--navy); padding: 1.5rem 5%; z-index: 998; flex-direction: column; gap: 1rem; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 1rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+
+  /* PAGES */
+  .page { display: none; padding-top: 64px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, var(--navy) 0%, #1a3a6b 60%, #1B4FD8 100%); padding: 80px 5% 100px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(27,79,216,0.3) 0%, transparent 70%); border-radius: 50%; }
+  .hero-inner { max-width: 700px; position: relative; z-index: 1; }
+  .hero-badge { display: inline-block; background: rgba(255,107,53,0.2); color: var(--accent); border: 1px solid rgba(255,107,53,0.4); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.8rem); color: white; line-height: 1.15; margin-bottom: 1.2rem; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: rgba(255,255,255,0.75); font-size: 1.1rem; line-height: 1.7; max-width: 540px; margin-bottom: 2rem; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { background: var(--accent); color: white; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer; transition: transform 0.2s; }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-outline { background: transparent; color: white; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; }
+  .hero-stats { display: flex; gap: 2.5rem; margin-top: 3rem; flex-wrap: wrap; }
+  .stat-num { font-size: 1.8rem; font-weight: 800; color: white; }
+  .stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+  /* SECTIONS */
+  .section { padding: 60px 5%; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+  .section-title { font-size: 1.6rem; font-weight: 700; color: var(--navy); }
+  .section-title span { color: var(--blue); }
+  .see-all { color: var(--blue); font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; background: none; }
+
+  /* CARDS */
+  .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+  .post-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s, background 0.3s; cursor: pointer; }
+  .post-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(27,79,216,0.12); }
+  .post-card-img { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+  .bg-seo { background: linear-gradient(135deg,#E8EFFF,#c7d9ff); }
+  .bg-content { background: linear-gradient(135deg,#FFF4E8,#ffe0c7); }
+  .bg-social { background: linear-gradient(135deg,#E8FFF4,#c7ffd9); }
+  .bg-email { background: linear-gradient(135deg,#E8F4FF,#c7e0ff); }
+  .post-card-body { padding: 1.2rem; }
+  .post-tag { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 0.7rem; }
+  .tag-seo { background: var(--sky); color: var(--blue); }
+  .tag-content { background: #FFF0E8; color: #C05A00; }
+  .tag-social { background: #E8FFF0; color: #1A7A40; }
+  .tag-email { background: #E8F4FF; color: #0055B0; }
+  .post-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); line-height: 1.4; margin-bottom: 0.6rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .post-card p { font-size: 0.85rem; color: var(--grey-mid); line-height: 1.6; margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .post-meta { display: flex; gap: 1rem; font-size: 0.78rem; color: var(--grey-mid); flex-wrap: wrap; }
+
+  /* CATEGORIES */
+  .categories-section { background: var(--grey-light); padding: 60px 5%; }
+  .cats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-top: 2rem; }
+  .cat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 1.2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .cat-card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(27,79,216,0.1); }
+  .cat-icon { font-size: 2rem; margin-bottom: 0.7rem; }
+  .cat-name { font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: 0.3rem; }
+  .cat-count { font-size: 0.8rem; color: var(--grey-mid); }
+
+  /* NEWSLETTER */
+  .newsletter { background: linear-gradient(135deg,var(--navy),#1B4FD8); padding: 60px 5%; text-align: center; }
+  .newsletter h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem,4vw,2.4rem); color: white; margin-bottom: 0.8rem; }
+  .newsletter p { color: rgba(255,255,255,0.7); margin-bottom: 2rem; }
+  .newsletter-form { display: flex; gap: 0.8rem; max-width: 480px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .newsletter-form input { flex: 1; min-width: 220px; padding: 13px 18px; border-radius: 8px; border: none; font-size: 0.95rem; outline: none; }
+  .newsletter-form button { background: var(--accent); color: white; padding: 13px 24px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; }
+
+  /* BLOG PAGE */
+  .blog-header { background: var(--navy); padding: 50px 5% 60px; }
+  .blog-header h1 { font-family: 'Playfair Display', serif; color: white; font-size: clamp(1.8rem,4vw,2.8rem); margin-bottom: 0.6rem; }
+  .blog-header p { color: rgba(255,255,255,0.7); }
+  .blog-layout { display: grid; grid-template-columns: 1fr 300px; gap: 2rem; padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
+  @media(max-width:900px){ .blog-layout { grid-template-columns: 1fr; } }
+  .filter-bar { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .filter-btn { padding: 7px 16px; border-radius: 20px; border: 1px solid var(--border); background: white; color: var(--grey-mid); font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .filter-btn.active, .filter-btn:hover { background: var(--blue); color: white; border-color: var(--blue); }
+  .blog-posts-list { display: flex; flex-direction: column; gap: 1.2rem; }
+  .blog-list-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 1.4rem; display: flex; gap: 1.2rem; cursor: pointer; transition: box-shadow 0.2s, transform 0.2s, background 0.3s; }
+  .blog-list-card:hover { box-shadow: 0 6px 24px rgba(27,79,216,0.1); transform: translateX(4px); }
+  .blog-list-img { width: 90px; height: 90px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+  .blog-list-body h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.4rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .blog-list-body p { font-size: 0.85rem; color: var(--grey-mid); line-height: 1.6; margin-bottom: 0.6rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .blog-list-meta { display: flex; gap: 1rem; font-size: 0.78rem; color: var(--grey-mid); flex-wrap: wrap; }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+  .sidebar-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 1.3rem; transition: background 0.3s; }
+  .sidebar-title { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--blue); display: inline-block; }
+  .sidebar-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .sidebar-tag { padding: 5px 12px; background: var(--sky); color: var(--blue); border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+  .sidebar-tag:hover { background: var(--blue); color: white; }
+  .popular-post { display: flex; gap: 0.8rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .popular-post:last-child { border-bottom: none; }
+  .popular-num { font-size: 1.4rem; font-weight: 800; color: var(--border); min-width: 30px; }
+  .popular-post h4 { font-size: 0.85rem; font-weight: 600; color: var(--navy); line-height: 1.4; }
+  .popular-post span { font-size: 0.75rem; color: var(--grey-mid); }
+
+  /* ABOUT */
+  .about-hero { background: linear-gradient(135deg,var(--navy),#1B4FD8); padding: 70px 5%; }
+  .about-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+  @media(max-width:700px){ .about-inner { grid-template-columns: 1fr; text-align: center; } }
+  .about-text h1 { font-family: 'Playfair Display', serif; color: white; font-size: clamp(1.8rem,4vw,2.6rem); margin-bottom: 1rem; }
+  .about-text p { color: rgba(255,255,255,0.75); line-height: 1.7; }
+  .avatar-circle { width: 180px; height: 180px; background: rgba(255,255,255,0.1); border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 5rem; margin: 0 auto; }
+  .about-name { color: white; font-weight: 700; font-size: 1.1rem; margin-top: 1rem; text-align: center; }
+  .about-role { color: rgba(255,255,255,0.6); font-size: 0.9rem; text-align: center; }
+  .about-content { max-width: 900px; margin: 0 auto; padding: 50px 5%; }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .skill-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
+  .skill-name { font-size: 0.9rem; font-weight: 600; color: var(--navy); margin-bottom: 0.6rem; display: flex; justify-content: space-between; }
+  .skill-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .skill-fill { height: 100%; background: linear-gradient(90deg,var(--blue),var(--accent)); border-radius: 3px; }
+  .timeline { margin-top: 1.5rem; }
+  .timeline-item { display: flex; gap: 1.2rem; padding-bottom: 1.5rem; position: relative; }
+  .timeline-item::before { content: ''; position: absolute; left: 16px; top: 36px; bottom: 0; width: 2px; background: var(--border); }
+  .timeline-item:last-child::before { display: none; }
+  .timeline-dot { width: 34px; height: 34px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem; flex-shrink: 0; }
+  .timeline-body h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+  .timeline-body p { font-size: 0.85rem; color: var(--grey-mid); line-height: 1.6; }
+  .timeline-body span { font-size: 0.78rem; color: var(--blue); font-weight: 600; }
+
+  /* CONTACT */
+  .contact-hero { background: var(--navy); padding: 50px 5% 60px; }
+  .contact-hero h1 { font-family: 'Playfair Display', serif; color: white; font-size: clamp(1.8rem,4vw,2.6rem); margin-bottom: 0.6rem; }
+  .contact-hero p { color: rgba(255,255,255,0.7); }
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; padding: 50px 5%; max-width: 1000px; margin: 0 auto; }
+  @media(max-width:700px){ .contact-layout { grid-template-columns: 1fr; } }
+  .contact-info h2 { font-size: 1.3rem; font-weight: 700; color: var(--navy); margin-bottom: 1.2rem; }
+  .contact-item { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.4rem; }
+  .contact-icon { width: 44px; height: 44px; background: var(--sky); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .contact-detail h4 { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 0.2rem; }
+  .contact-detail p { font-size: 0.85rem; color: var(--grey-mid); }
+  .contact-form-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 2rem; transition: background 0.3s; }
+  .contact-form-box h2 { font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1.1rem; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--grey-dark); margin-bottom: 0.4rem; }
+  .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 11px 14px; border: 1px solid var(--card-border); border-radius: 8px; font-size: 0.9rem; font-family: inherit; color: var(--text); outline: none; transition: border-color 0.2s, background 0.3s; background: var(--card-bg); }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(27,79,216,0.1); }
+  .form-group textarea { height: 110px; resize: vertical; }
+  .form-submit { width: 100%; background: var(--blue); color: white; padding: 13px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; }
+  .success-msg { display: none; background: #E8FFF0; color: #1A7A40; padding: 12px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; margin-top: 1rem; text-align: center; }
+
+  /* FOOTER */
+  footer { background: var(--navy); color: rgba(255,255,255,0.7); padding: 50px 5% 30px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; }
+  @media(max-width:700px){ .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+  .footer-brand .logo { font-size: 1.3rem; display: block; margin-bottom: 0.8rem; }
+  .footer-brand p { font-size: 0.85rem; line-height: 1.7; max-width: 280px; }
+  .footer-col h4 { color: white; font-size: 0.9rem; font-weight: 700; margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col ul li a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.85rem; cursor: pointer; }
+  .footer-col ul li a:hover { color: white; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; }
+
+  /* SCROLL TOP */
+  .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; background: var(--blue); color: white; border: none; border-radius: 50%; font-size: 1.1rem; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(27,79,216,0.4); z-index: 100; }
+  .scroll-top.show { display: flex; }
+  .whatsapp-float { position: fixed; bottom: 80px; right: 22px; width: 50px; height: 50px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(37,211,102,0.5); z-index: 100; transition: transform 0.2s; }
+  .whatsapp-float:hover { transform: scale(1.1); }
+
+  /* POST READER MODAL */
+  .post-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 3000; align-items: flex-start; justify-content: center; padding: 1rem; overflow-y: auto; }
+  .post-modal.open { display: flex; }
+  .post-modal-box { background: var(--card-bg); border-radius: 16px; width: 100%; max-width: 800px; margin: auto; overflow: hidden; transition: background 0.3s; }
+  .post-modal-header { background: var(--navy); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: flex-start; }
+  .post-modal-header h2 { color: white; font-size: 1.3rem; font-weight: 700; line-height: 1.4; flex: 1; margin-right: 1rem; }
+  .post-modal-close { background: rgba(255,255,255,0.2); color: white; border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; flex-shrink: 0; }
+  .post-modal-meta { display: flex; gap: 1rem; padding: 1rem 2rem; background: var(--grey-light); font-size: 0.82rem; color: var(--grey-mid); flex-wrap: wrap; }
+  .post-modal-content { padding: 2rem; font-size: 1rem; line-height: 1.8; color: var(--text); white-space: pre-wrap; }
+  .post-modal-content p { margin-bottom: 1rem; }
+  @media(max-width:600px){ .post-modal-header { padding: 1.2rem; } .post-modal-content { padding: 1.2rem; } }
+
+  /* LOADING */
+  .loading { text-align: center; padding: 3rem; color: var(--grey-mid); }
+  .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .empty-state { text-align: center; padding: 3rem; color: var(--grey-mid); }
+  .empty-state div { font-size: 3rem; margin-bottom: 1rem; }
+
+  /* ADMIN */
+  .admin-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
+  .admin-overlay.open { display: flex; }
+  .login-box { background: white; border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 380px; text-align: center; }
+  .login-box h2 { font-size: 1.4rem; font-weight: 800; color: var(--navy); margin-bottom: 0.3rem; }
+  .login-box .sub { color: var(--grey-mid); font-size: 0.88rem; margin-bottom: 1.6rem; }
+  .login-box input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.95rem; margin-bottom: 0.8rem; outline: none; font-family: inherit; }
+  .login-box input:focus { border-color: var(--blue); }
+  .login-err { color: #EF4444; font-size: 0.83rem; margin-bottom: 0.8rem; display: none; }
+  .login-btn { width: 100%; background: var(--blue); color: white; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; margin-bottom: 0.7rem; }
+  .login-cancel { background: none; border: none; color: var(--grey-mid); cursor: pointer; font-size: 0.85rem; }
+  .admin-panel-box { background: white; border-radius: 16px; width: 100%; max-width: 820px; max-height: 90vh; overflow-y: auto; display: none; }
+  .admin-panel-box.show { display: block; }
+  .ap-header { background: var(--navy); padding: 1.2rem 1.8rem; border-radius: 16px 16px 0 0; display: flex; align-items: center; justify-content: space-between; }
+  .ap-header h2 { color: white; font-size: 1.05rem; font-weight: 700; }
+  .ap-close { background: rgba(255,255,255,0.2); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; }
+  .ap-body { padding: 1.6rem; }
+  .ap-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.4rem; border-bottom: 2px solid var(--border); }
+  .ap-tab { padding: 8px 18px; border: none; background: none; color: var(--grey-mid); font-size: 0.88rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-family: inherit; }
+  .ap-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .ap-tab-content { display: none; }
+  .ap-tab-content.active { display: block; }
+  .ap-form .fg { margin-bottom: 1rem; }
+  .ap-form label { display: block; font-size: 0.83rem; font-weight: 600; color: var(--grey-dark); margin-bottom: 0.35rem; }
+  .ap-form input, .ap-form textarea, .ap-form select { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: inherit; outline: none; }
+  .ap-form input:focus, .ap-form textarea:focus { border-color: var(--blue); }
+  .ap-form textarea { height: 90px; resize: vertical; }
+  .ap-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width:550px){ .ap-row { grid-template-columns: 1fr; } }
+  .ap-publish-btn { width: 100%; background: var(--blue); color: white; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; margin-top: 0.4rem; }
+  .ap-publish-btn:hover { background: #1545c0; }
+  .ap-publish-btn:disabled { background: var(--grey-mid); cursor: not-allowed; }
+  .ap-success { display: none; background: #ECFDF5; color: #065F46; padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; margin-top: 0.8rem; text-align: center; }
+  .ap-error { display: none; background: #FEF2F2; color: #991B1B; padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; margin-top: 0.8rem; text-align: center; }
+  .ap-post-row { display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.7rem; background: var(--grey-light); }
+  .ap-post-emoji { font-size: 1.8rem; flex-shrink: 0; }
+  .ap-post-info { flex: 1; min-width: 0; }
+  .ap-post-info h4 { font-size: 0.88rem; font-weight: 700; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ap-post-info span { font-size: 0.76rem; color: var(--grey-mid); }
+  .ap-del-btn { background: #FEE2E2; color: #DC2626; border: none; padding: 7px 13px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+  .ap-del-btn:hover { background: #DC2626; color: white; }
+  .ap-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 1rem; }
+  .ap-stat-card { background: var(--grey-light); border-radius: 10px; padding: 1.2rem; text-align: center; }
+  .ap-stat-card .big { font-size: 2rem; font-weight: 800; color: var(--blue); }
+  .ap-stat-card .lbl { font-size: 0.8rem; color: var(--grey-mid); margin-top: 0.3rem; }
+  .char-hint { font-size: 0.75rem; color: var(--grey-mid); text-align: right; margin-top: 3px; }
+
+  @media(max-width:768px){
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+  }
+</style>
+<!-- POST READER MODAL -->
+<div class="post-modal" id="postModal">
+  <div class="post-modal-box">
+    <div class="post-modal-header">
+      <h2 id="modalTitle">Loading...</h2>
+      <button class="post-modal-close" onclick="closePost()">✕</button>
+    </div>
+    <div class="post-modal-meta" id="modalMeta"></div>
+    <div class="post-modal-content" id="modalContent">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo" onclick="showPage('home')">SEO<span>Guru</span></div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" class="active">🏠 Home</a></li>
+    <li><a onclick="showPage('blog')" id="nav-blog">📝 Blog</a></li>
+    <li><a onclick="showPage('about')" id="nav-about">👤 About</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact">📧 Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" title="Dark/Light Mode">🌙</button>
+    <button class="admin-nav-btn" onclick="openAdmin()" id="adminNavBtn">⚙️ Admin</button>
+    <button class="nav-cta" onclick="showPage('contact')">Contact करें</button>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a onclick="showPage('home');toggleMenu()">🏠 Home</a>
+  <a onclick="showPage('blog');toggleMenu()">📝 Blog</a>
+  <a onclick="showPage('about');toggleMenu()">👤 About</a>
+  <a onclick="showPage('contact');toggleMenu()">📧 Contact</a>
+</div>
+
+<!-- ADMIN OVERLAY -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="login-box" id="loginBox">
+    <div style="font-size:2.5rem;margin-bottom:0.8rem">🔐</div>
+    <h2>Admin Login</h2>
+    <p class="sub">Blog manage करने के लिए login करो</p>
+    <input type="password" id="adminPassInput" placeholder="Password डालो" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-err" id="loginErr">❌ गलत password!</div>
+    <button class="login-btn" onclick="doLogin()">🚀 Login करो</button><br>
+    <button class="login-cancel" onclick="closeAdmin()">Cancel</button>
+  </div>
+  <div class="admin-panel-box" id="adminPanelBox">
+    <div class="ap-header">
+      <h2>⚙️ Admin Panel — Blog Manage करो</h2>
+      <button class="ap-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="ap-body">
+      <div class="ap-tabs">
+        <button class="ap-tab active" onclick="switchApTab('add',this)">➕ नया Post</button>
+        <button class="ap-tab" onclick="switchApTab('manage',this)">📋 Posts Manage</button>
+        <button class="ap-tab" onclick="switchApTab('stats',this)">📊 Stats</button>
+      </div>
+      <div class="ap-tab-content active" id="aptab-add">
+        <div class="ap-form">
+          <div class="ap-row">
+            <div class="fg"><label>Blog Title *</label><input type="text" id="apTitle" placeholder="जैसे: SEO क्या होता है?"></div>
+            <div class="fg"><label>Category *</label>
+              <select id="apCat">
+                <option value="seo">🔍 SEO</option>
+                <option value="content">✍️ Content Marketing</option>
+                <option value="social">📱 Social Media</option>
+                <option value="email">📧 Email Marketing</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Short Description * <span style="color:var(--grey-mid);font-weight:400">(2-3 lines — 300 characters)</span></label>
+            <textarea id="apDesc" placeholder="Blog की short summary लिखो..." maxlength="300" oninput="document.getElementById('charCount').textContent=this.value.length" style="height:70px"></textarea>
+            <div class="char-hint"><span id="charCount">0</span>/300</div>
+          </div>
+          <div class="fg">
+            <label>Full Article * <span style="color:var(--grey-mid);font-weight:400">(500+ words का पूरा content)</span></label>
+            <textarea id="apContent" placeholder="यहाँ पूरा article लिखो — 500 words या उससे ज्यादा..." style="height:200px;resize:vertical" oninput="updateWordCount(this)"></textarea>
+            <div class="char-hint">Words: <span id="wordCount">0</span></div>
+          </div>
+          <div class="ap-row">
+            <div class="fg"><label>Emoji Icon</label><input type="text" id="apEmoji" placeholder="जैसे: 🔍 📱 ✍️" maxlength="4"></div>
+            <div class="fg"><label>Read Time</label><input type="text" id="apTime" placeholder="जैसे: 5 min"></div>
+          </div>
+          <button class="ap-publish-btn" id="publishBtn" onclick="apAddPost()">✅ Post Publish करो</button>
+          <div class="ap-success" id="apSuccess">🎉 Post publish हो गई! सब जगह दिखेगी!</div>
+          <div class="ap-error" id="apError">❌ कुछ गलत हुआ। फिर try करो।</div>
+        </div>
+      </div>
+      <div class="ap-tab-content" id="aptab-manage"><div id="apPostsList"><div class="loading"><div class="spinner"></div>Loading...</div></div></div>
+      <div class="ap-tab-content" id="aptab-stats"><div class="ap-stats" id="apStatsGrid"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">🚀 Hindi में SEO सीखो</div>
+      <h1>Digital Marketing की<br><span>दुनिया में आगे</span> बढ़ो</h1>
+      <p>SEO, Content Marketing, Social Media और Email Marketing — सब कुछ आसान Hindi भाषा में सीखो।</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('blog')">Blog पढ़ो 📖</button>
+        <button class="btn-outline" onclick="showPage('about')">हमारे बारे में</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num" id="totalPostCount">0+</div><div class="stat-label">Blog Posts</div></div>
+        <div><div class="stat-num">100%</div><div class="stat-label">Free Content</div></div>
+        <div><div class="stat-num">Hindi</div><div class="stat-label">में सीखो</div></div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Latest <span>Blog Posts</span></h2>
+      <button class="see-all" onclick="showPage('blog')">सब देखो →</button>
+    </div>
+    <div class="posts-grid" id="homePostsGrid">
+      <div class="loading" style="grid-column:1/-1"><div class="spinner"></div><p>Posts load हो रही हैं...</p></div>
+    </div>
+  </section>
+  <section class="categories-section">
+    <h2 class="section-title" style="text-align:center;margin-bottom:0.3rem">Topics <span>Explore करो</span></h2>
+    <p style="text-align:center;color:var(--grey-mid);font-size:0.9rem">अपने interest का topic चुनो</p>
+    <div class="cats-grid">
+      <div class="cat-card" onclick="filterAndGo('seo')"><div class="cat-icon">🔍</div><div class="cat-name">SEO</div><div class="cat-count" id="cnt-seo">0 Articles</div></div>
+      <div class="cat-card" onclick="filterAndGo('content')"><div class="cat-icon">✍️</div><div class="cat-name">Content Marketing</div><div class="cat-count" id="cnt-content">0 Articles</div></div>
+      <div class="cat-card" onclick="filterAndGo('social')"><div class="cat-icon">📱</div><div class="cat-name">Social Media</div><div class="cat-count" id="cnt-social">0 Articles</div></div>
+      <div class="cat-card" onclick="filterAndGo('email')"><div class="cat-icon">📧</div><div class="cat-name">Email Marketing</div><div class="cat-count" id="cnt-email">0 Articles</div></div>
+    </div>
+  </section>
+  <section class="newsletter">
+    <h2>Free SEO Tips पाओ 📧</h2>
+    <p>हर हफ्ते सीधे inbox में — नई tips, tricks और guides।</p>
+    <div class="newsletter-form">
+      <input type="email" id="homeEmail" placeholder="tumhari@email.com">
+      <button onclick="subNewsletter('homeEmail','homeSubMsg')">Subscribe करो</button>
+    </div>
+    <p id="homeSubMsg" style="color:#a0ffb8;margin-top:1rem;display:none;font-weight:600">✅ Subscribe हो गए!</p>
+  </section>
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+  <span class="logo">SEO<span style="color:var(--accent)">Guru</span></span>
+  <p>Hindi में Digital Marketing सीखने की सबसे अच्छी जगह।</p>
+  <div style="display:flex;gap:0.8rem;margin-top:1rem">
+    <a href="https://www.instagram.com/css_toot_gya?utm_source=qr&igsh=bDNpbDFoZWp0emg5" target="_blank" style="display:flex;align-items:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      Instagram
+    </a>
+    <a href="https://wa.me/918816907399" target="_blank" style="display:flex;align-items:center;gap:6px;background:#25D366;color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</div>
+      <div class="footer-col"><h4>Quick Links</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('blog')">Blog</a></li><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Topics</h4><ul><li><a onclick="filterAndGo('seo')">SEO Guide</a></li><li><a onclick="filterAndGo('content')">Content Marketing</a></li><li><a onclick="filterAndGo('social')">Social Media</a></li><li><a onclick="filterAndGo('email')">Email Marketing</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2024 SEOGuru.</span><span>Made with ❤️ for Hindi Learners</span></div>
+  </footer>
+</div>
+
+<!-- BLOG PAGE -->
+<div class="page" id="page-blog">
+  <div class="blog-header"><h1>📝 Blog — सब Articles</h1><p>Digital Marketing की पूरी दुनिया — Hindi में</p></div>
+  <div class="blog-layout">
+    <div>
+      <div class="filter-bar">
+        <button class="filter-btn active" id="fbtn-all" onclick="filterPosts(this,'all')">सब</button>
+        <button class="filter-btn" id="fbtn-seo" onclick="filterPosts(this,'seo')">🔍 SEO</button>
+        <button class="filter-btn" id="fbtn-content" onclick="filterPosts(this,'content')">✍️ Content</button>
+        <button class="filter-btn" id="fbtn-social" onclick="filterPosts(this,'social')">📱 Social Media</button>
+        <button class="filter-btn" id="fbtn-email" onclick="filterPosts(this,'email')">📧 Email</button>
+      </div>
+      <div class="blog-posts-list" id="blogList">
+        <div class="loading"><div class="spinner"></div><p>Posts load हो रही हैं...</p></div>
+      </div>
+    </div>
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">🔥 Popular Posts</div>
+        <div id="sidebarPopular"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-title">🏷️ Tags</div>
+        <div class="sidebar-tags">
+          <span class="sidebar-tag" onclick="filterPosts(document.getElementById('fbtn-seo'),'seo')">SEO</span>
+          <span class="sidebar-tag">Backlinks</span>
+          <span class="sidebar-tag">Keywords</span>
+          <span class="sidebar-tag">On-Page</span>
+          <span class="sidebar-tag">Off-Page</span>
+          <span class="sidebar-tag">Content</span>
+          <span class="sidebar-tag">Traffic</span>
+          <span class="sidebar-tag">Google</span>
+        </div>
+      </div>
+      <div class="sidebar-card" style="background:linear-gradient(135deg,var(--navy),#1B4FD8);border:none">
+        <p style="color:white;font-weight:700;font-size:1rem;margin-bottom:0.5rem">📧 Newsletter</p>
+        <p style="color:rgba(255,255,255,0.7);font-size:0.82rem;margin-bottom:1rem">Weekly tips — Free!</p>
+        <input type="email" id="sideEmail" placeholder="Email डालो" style="width:100%;padding:9px 12px;border-radius:6px;border:none;margin-bottom:0.6rem;font-size:0.85rem">
+        <button onclick="subNewsletter('sideEmail','sideSubMsg')" style="width:100%;background:var(--accent);color:white;padding:9px;border-radius:6px;border:none;font-weight:700;cursor:pointer">Subscribe ✓</button>
+        <p id="sideSubMsg" style="color:#a0ffb8;font-size:0.82rem;margin-top:0.5rem;display:none">✅ Done!</p>
+      </div>
+    </aside>
+  </div>
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+  <span class="logo">SEO<span style="color:var(--accent)">Guru</span></span>
+  <p>Hindi में Digital Marketing सीखने की सबसे अच्छी जगह।</p>
+  <div style="display:flex;gap:0.8rem;margin-top:1rem">
+    <a href="https://www.instagram.com/css_toot_gya?utm_source=qr&igsh=bDNpbDFoZWp0emg5" target="_blank" style="display:flex;align-items:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      Instagram
+    </a>
+    <a href="https://wa.me/918816907399" target="_blank" style="display:flex;align-items:center;gap:6px;background:#25D366;color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</div>
+      <div class="footer-col"><h4>Quick Links</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('blog')">Blog</a></li><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Topics</h4><ul><li><a>SEO Guide</a></li><li><a>Content Marketing</a></li><li><a>Social Media</a></li><li><a>Email Marketing</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2024 SEOGuru.</span><span>Made with ❤️</span></div>
+  </footer>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="page-about">
+  <div class="about-hero">
+    <div class="about-inner">
+      <div class="about-text"><h1>नमस्ते! 👋<br>मैं हूँ आपका SEO Guide</h1><p>Digital Marketing की दुनिया में 5+ साल से हूँ। मेरा लक्ष्य — हर Hindi speaking इंसान को Online Marketing सिखाना।</p></div>
+      <div><div class="avatar-circle">👨‍💻</div><div class="about-name">SEO Guru</div><div class="about-role">Digital Marketing Expert</div></div>
+    </div>
+  </div>
+  <div class="about-content">
+    <h2 class="section-title" style="margin-bottom:1.2rem">मेरी <span>Skills</span></h2>
+    <div class="skills-grid">
+      <div class="skill-item"><div class="skill-name"><span>🔍 SEO</span><span>95%</span></div><div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>✍️ Content Writing</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>📱 Social Media</span><span>85%</span></div><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
+      <div class="skill-item"><div class="skill-name"><span>📧 Email Marketing</span><span>80%</span></div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+    </div>
+    <h2 class="section-title" style="margin:2.5rem 0 1.2rem">मेरा <span>Journey</span></h2>
+    <div class="timeline">
+      <div class="timeline-item"><div class="timeline-dot">🎓</div><div class="timeline-body"><span>2019</span><h4>Digital Marketing सीखना शुरू किया</h4><p>YouTube और free courses से SEO basics सीखे।</p></div></div>
+      <div class="timeline-item"><div class="timeline-dot">💼</div><div class="timeline-body"><span>2020</span><h4>पहला Blog शुरू किया</h4><p>Hindi में SEO blog — पहले month में 500 visitors।</p></div></div>
+      <div class="timeline-item"><div class="timeline-dot">🚀</div><div class="timeline-body"><span>2021</span><h4>Freelancing शुरू की</h4><p>10+ clients को SEO services दीं।</p></div></div>
+      <div class="timeline-item"><div class="timeline-dot">🏆</div><div class="timeline-body"><span>2024</span><h4>SEOGuru Blog Launch</h4><p>10,000+ readers को Hindi में Digital Marketing सिखा रहे हैं।</p></div></div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+  <span class="logo">SEO<span style="color:var(--accent)">Guru</span></span>
+  <p>Hindi में Digital Marketing सीखने की सबसे अच्छी जगह।</p>
+  <div style="display:flex;gap:0.8rem;margin-top:1rem">
+    <a href="https://www.instagram.com/css_toot_gya?utm_source=qr&igsh=bDNpbDFoZWp0emg5" target="_blank" style="display:flex;align-items:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      Instagram
+    </a>
+    <a href="https://wa.me/918816907399" target="_blank" style="display:flex;align-items:center;gap:6px;background:#25D366;color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</div>
+      <div class="footer-col"><h4>Quick Links</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('blog')">Blog</a></li><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Topics</h4><ul><li><a>SEO Guide</a></li><li><a>Content Marketing</a></li><li><a>Social Media</a></li><li><a>Email Marketing</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2024 SEOGuru.</span><span>Made with ❤️</span></div>
+  </footer>
+</div>
+
+<!-- CONTACT PAGE -->
+<div class="page" id="page-contact">
+  <div class="contact-hero"><h1>📧 Contact करो</h1><p>कोई सवाल है? हम यहाँ हैं!</p></div>
+  <div class="contact-layout">
+    <div class="contact-info">
+      <h2>बात करो हमसे 👋</h2>
+      <div class="contact-item"><div class="contact-icon">📧</div><div class="contact-detail"><h4>Email</h4><p>hello@seoguru.in</p></div></div>
+      <div class="contact-item"><div class="contact-icon">📱</div><div class="contact-detail"><h4>WhatsApp</h4><p>+91 98765 43210</p></div></div>
+      <div class="contact-item"><div class="contact-icon">📍</div><div class="contact-detail"><h4>Location</h4><p>Delhi, India 🇮🇳</p></div></div>
+      <div class="contact-item"><div class="contact-icon">⏰</div><div class="contact-detail"><h4>Reply Time</h4><p>24 घंटे के अंदर</p></div></div>
+    </div>
+    <div class="contact-form-box">
+      <h2>Message भेजो 📩</h2>
+      <div class="form-group"><label>नाम *</label><input type="text" id="cName" placeholder="जैसे: Rahul Kumar"></div>
+      <div class="form-group"><label>Email *</label><input type="email" id="cEmail" placeholder="tumhari@email.com"></div>
+      <div class="form-group"><label>Topic</label><select id="cTopic"><option>SEO सवाल</option><option>Guest Post</option><option>Collaboration</option><option>अन्य</option></select></div>
+      <div class="form-group"><label>Message *</label><textarea id="cMsg" placeholder="अपना message लिखो..."></textarea></div>
+      <button class="form-submit" onclick="submitContact()">Message भेजो 🚀</button>
+      <div class="success-msg" id="contactSuccess">✅ Message मिल गया! जल्द reply करेंगे।</div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+  <span class="logo">SEO<span style="color:var(--accent)">Guru</span></span>
+  <p>Hindi में Digital Marketing सीखने की सबसे अच्छी जगह।</p>
+  <div style="display:flex;gap:0.8rem;margin-top:1rem">
+    <a href="https://www.instagram.com/css_toot_gya?utm_source=qr&igsh=bDNpbDFoZWp0emg5" target="_blank" style="display:flex;align-items:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      Instagram
+    </a>
+    <a href="https://wa.me/918816907399" target="_blank" style="display:flex;align-items:center;gap:6px;background:#25D366;color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</div>
+      <div class="footer-col"><h4>Quick Links</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('blog')">Blog</a></li><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Topics</h4><ul><li><a>SEO Guide</a></li><li><a>Content Marketing</a></li><li><a>Social Media</a></li><li><a>Email Marketing</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2024 SEOGuru.</span><span>Made with ❤️</span></div>
+  </footer>
+</div>
+
+<!-- PWA Install Button -->
+<button class="pwa-install-btn" id="pwaInstallBtn" onclick="installPWA()">📱 App Install करो</button>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/918816907399" target="_blank" class="whatsapp-float" title="WhatsApp पर बात करो">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="28" height="28">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ═══════════════════════════════════
+// SUPABASE CONFIG
+// ═══════════════════════════════════
+const SUPABASE_URL = 'https://rgtcdblwauibxvczkgqq.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJndGNkYmx3YXVpYnh2Y3prZ3FxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2NjY1MDEsImV4cCI6MjA5NzI0MjUwMX0.HzQcyYE1KG-WefAhQraxF7A0NQPG8aCehHBC5qf3jZk';
+const ADMIN_PASSWORD = 'pankaj@11';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+const CAT = {
+  seo:     { label:'SEO',           emoji:'🔍', bg:'bg-seo',     tag:'tag-seo' },
+  content: { label:'Content',       emoji:'✍️', bg:'bg-content', tag:'tag-content' },
+  social:  { label:'Social Media',  emoji:'📱', bg:'bg-social',  tag:'tag-social' },
+  email:   { label:'Email',         emoji:'📧', bg:'bg-email',   tag:'tag-email' },
+};
+
+// ═══ SUPABASE API ═══
+async function dbGetPosts(cat) {
+  let query = sb.from('posts').select('*').order('created_at', {ascending: false});
+  if (cat && cat !== 'all') query = query.eq('cat', cat);
+  const { data, error } = await query;
+  if (error) { console.error('GET error:', error); throw new Error(error.message); }
+  return data || [];
+}
+
+async function dbAddPost(post) {
+  const { error } = await sb.from('posts').insert([post]);
+  if (error) { console.error('POST error:', error); throw new Error(error.message); }
+  return true;
+}
+
+async function dbDeletePost(id) {
+  const { error } = await sb.from('posts').delete().eq('id', id);
+  if (error) { console.error('DELETE error:', error); throw new Error(error.message); }
+  return true;
+}
+
+// ═══ NAV ═══
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const el = document.getElementById('nav-' + name);
+  if (el) el.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (name === 'home') loadHomeGrid();
+  if (name === 'blog') loadBlogList('all');
+}
+
+function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+
+// ═══ ADMIN ═══
+let isLoggedIn = false;
+
+function openAdmin() {
+  document.getElementById('adminOverlay').classList.add('open');
+  if (isLoggedIn) {
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('adminPanelBox').classList.add('show');
+    loadApPosts();
+  } else {
+    document.getElementById('loginBox').style.display = 'block';
+    document.getElementById('adminPanelBox').classList.remove('show');
+    document.getElementById('adminPassInput').value = '';
+    document.getElementById('loginErr').style.display = 'none';
+  }
+}
+
+function closeAdmin() { document.getElementById('adminOverlay').classList.remove('open'); }
+
+function doLogin() {
+  if (document.getElementById('adminPassInput').value === ADMIN_PASSWORD) {
+    isLoggedIn = true;
+    document.getElementById('adminNavBtn').style.display = 'block';
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('adminPanelBox').classList.add('show');
+    loadApPosts();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('adminPassInput').value = '';
+  }
+}
+
+function switchApTab(name, btn) {
+  document.querySelectorAll('.ap-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.ap-tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('aptab-' + name).classList.add('active');
+  if (name === 'manage') loadApPosts();
+  if (name === 'stats') loadApStats();
+}
+
+// ═══ ADD POST ═══
+async function apAddPost() {
+  const title   = document.getElementById('apTitle').value.trim();
+  const cat     = document.getElementById('apCat').value;
+  const desc    = document.getElementById('apDesc').value.trim();
+  const content = document.getElementById('apContent').value.trim();
+  const emoji   = document.getElementById('apEmoji').value.trim() || CAT[cat].emoji;
+  const time    = document.getElementById('apTime').value.trim() || '5 min';
+  if (!title || !desc) { alert('Title और Description जरूर भरो!'); return; }
+  if (content && content.split(/\s+/).length < 100) { if(!confirm('Article 500 words से कम है। फिर भी publish करें?')) return; }
+
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true; btn.textContent = '⏳ Publishing...';
+  document.getElementById('apSuccess').style.display = 'none';
+  document.getElementById('apError').style.display = 'none';
+
+  try {
+    await dbAddPost({ title, cat, description: desc, content: content || '', emoji, read_time: time, views: Math.floor(Math.random()*200)+50 });
+    document.getElementById('apTitle').value = '';
+    document.getElementById('apDesc').value = '';
+    document.getElementById('apContent').value = '';
+    document.getElementById('apEmoji').value = '';
+    document.getElementById('apTime').value = '';
+    document.getElementById('charCount').textContent = '0';
+    document.getElementById('wordCount').textContent = '0';
+    document.getElementById('apSuccess').style.display = 'block';
+    setTimeout(() => document.getElementById('apSuccess').style.display = 'none', 4000);
+    loadHomeGrid();
+    loadBlogList(activeFilter);
+    updateCounts();
+  } catch(e) {
+    document.getElementById('apError').style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = '✅ Post Publish करो';
+  }
+}
+
+// ═══ LOAD HOME GRID ═══
+async function loadHomeGrid() {
+  const grid = document.getElementById('homePostsGrid');
+  grid.innerHTML = '<div class="loading" style="grid-column:1/-1"><div class="spinner"></div><p>Loading...</p></div>';
+  try {
+    const posts = await dbGetPosts('all');
+    const count = document.getElementById('totalPostCount');
+    if (count) count.textContent = posts.length + '+';
+    if (!posts.length) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div>📝</div><p>Admin Panel से पहला post डालो!</p></div>'; return;
+    }
+    grid.innerHTML = posts.slice(0,3).map(p => {
+      const c = CAT[p.cat] || CAT.seo;
+      return `<div class="post-card"><div class="post-card-img ${c.bg}">${p.emoji}</div><div class="post-card-body"><span class="post-tag ${c.tag}">${c.label}</span><h3>${p.title}</h3><p>${p.description}</p><div class="post-meta"><span>📅 ${fmtDate(p.created_at)}</span><span>⏱ ${p.read_time}</span><span>👁 ${p.views}</span></div></div></div>`;
+    }).join('');
+    updateCounts(posts);
+  } catch(e) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div>⚠️</div><p>Posts load नहीं हो सकीं।</p></div>';
+  }
+}
+
+// ═══ LOAD BLOG LIST ═══
+let activeFilter = 'all';
+async function loadBlogList(filter) {
+  if (filter) activeFilter = filter;
+  const list = document.getElementById('blogList');
+  list.innerHTML = '<div class="loading"><div class="spinner"></div><p>Posts load हो रही हैं...</p></div>';
+  try {
+    const posts = await dbGetPosts(activeFilter);
+    if (!posts.length) {
+      list.innerHTML = `<div class="empty-state"><div>📭</div><p>${activeFilter==='all'?'अभी कोई post नहीं।':'इस category में कोई post नहीं।'}</p></div>`;
+    } else {
+      list.innerHTML = posts.map(p => {
+        const c = CAT[p.cat] || CAT.seo;
+        return `<div class="blog-list-card"><div class="blog-list-img ${c.bg}">${p.emoji}</div><div class="blog-list-body"><span class="post-tag ${c.tag}">${c.label}</span><h3>${p.title}</h3><p>${p.description}</p><div class="blog-list-meta"><span>📅 ${fmtDate(p.created_at)}</span><span>⏱ ${p.read_time}</span><span>👁 ${p.views}</span></div></div></div>`;
+      }).join('');
+    }
+    const top = [...posts].sort((a,b)=>b.views-a.views).slice(0,4);
+    document.getElementById('sidebarPopular').innerHTML = top.length
+      ? top.map((p,i)=>`<div class="popular-post"><div class="popular-num">0${i+1}</div><div><h4>${p.title}</h4><span>${p.views} views</span></div></div>`).join('')
+      : '<p style="color:var(--grey-mid);font-size:0.85rem;padding:1rem 0">Posts डालने के बाद दिखेंगे।</p>';
+    updateCounts(posts);
+  } catch(e) {
+    list.innerHTML = '<div class="empty-state"><div>⚠️</div><p>Posts load नहीं हो सकीं।</p></div>';
+  }
+}
+
+// ═══ FILTER ═══
+function filterPosts(btn, cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadBlogList(cat);
+}
+
+function filterAndGo(cat) {
+  showPage('blog');
+  setTimeout(() => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById('fbtn-' + cat);
+    if (btn) btn.classList.add('active');
+    loadBlogList(cat);
+  }, 100);
+}
+
+// ═══ ADMIN MANAGE ═══
+async function loadApPosts() {
+  const el = document.getElementById('apPostsList');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  try {
+    const posts = await dbGetPosts('all');
+    if (!posts.length) { el.innerHTML = '<div class="empty-state"><div>📭</div><p>अभी कोई post नहीं है।</p></div>'; return; }
+    el.innerHTML = posts.map(p => {
+      const c = CAT[p.cat] || CAT.seo;
+      return `<div class="ap-post-row"><div class="ap-post-emoji">${p.emoji}</div><div class="ap-post-info"><h4>${p.title}</h4><span>${c.label} • ${fmtDate(p.created_at)} • ${p.views} views</span></div><button class="ap-del-btn" onclick="apDeletePost(${p.id})">🗑 Delete</button></div>`;
+    }).join('');
+    loadApStats(posts);
+  } catch(e) {
+    el.innerHTML = '<div class="empty-state"><div>⚠️</div><p>Load नहीं हो सकीं।</p></div>';
+  }
+}
+
+async function apDeletePost(id) {
+  if (!confirm('क्या सच में delete करना है?')) return;
+  try {
+    await dbDeletePost(id);
+    loadApPosts(); loadHomeGrid(); loadBlogList(activeFilter);
+  } catch(e) { alert('Delete नहीं हो सका।'); }
+}
+
+async function loadApStats(posts) {
+  if (!posts) { try { posts = await dbGetPosts('all'); } catch(e) { return; } }
+  const totalViews = posts.reduce((s,p)=>s+p.views,0);
+  document.getElementById('apStatsGrid').innerHTML = `
+    <div class="ap-stat-card"><div class="big">${posts.length}</div><div class="lbl">Total Posts</div></div>
+    <div class="ap-stat-card"><div class="big">${totalViews}</div><div class="lbl">Total Views</div></div>
+    <div class="ap-stat-card"><div class="big">${[...new Set(posts.map(p=>p.cat))].length}</div><div class="lbl">Categories</div></div>
+    <div class="ap-stat-card"><div class="big" style="font-size:1rem">${posts[0]?fmtDate(posts[0].created_at):'—'}</div><div class="lbl">Last Post</div></div>`;
+}
+
+// ═══ COUNTS ═══
+async function updateCounts(posts) {
+  if (!posts) { try { posts = await dbGetPosts('all'); } catch(e) { return; } }
+  ['seo','content','social','email'].forEach(cat => {
+    const n = posts.filter(p=>p.cat===cat).length;
+    const el = document.getElementById('cnt-' + cat);
+    if (el) el.textContent = n + ' Article' + (n!==1?'s':'');
+  });
+  const tc = document.getElementById('totalPostCount');
+  if (tc) tc.textContent = posts.length + '+';
+}
+
+// ═══ HELPERS ═══
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function subNewsletter(inputId, msgId) {
+  if (document.getElementById(inputId).value) {
+    document.getElementById(msgId).style.display = 'block';
+    document.getElementById(inputId).value = '';
+  }
+}
+
+function submitContact() {
+  const n = document.getElementById('cName').value;
+  const e = document.getElementById('cEmail').value;
+  const m = document.getElementById('cMsg').value;
+  if (n && e && m) {
+    document.getElementById('contactSuccess').style.display = 'block';
+    document.getElementById('cName').value = '';
+    document.getElementById('cEmail').value = '';
+    document.getElementById('cMsg').value = '';
+  } else { alert('कृपया सभी fields भरें।'); }
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
+});
+
+document.getElementById('adminOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeAdmin();
+});
+
+// SECRET ADMIN ACCESS — 5 बार logo पर click करो
+let logoClicks = 0, logoTimer;
+document.querySelector('.logo').addEventListener('click', function() {
+  logoClicks++;
+  clearTimeout(logoTimer);
+  logoTimer = setTimeout(() => logoClicks = 0, 2000);
+  if (logoClicks >= 5) { logoClicks = 0; openAdmin(); }
+});
+
+// INIT
+initTheme();
+loadHomeGrid();
+updateCounts();
+</script>
+</body>
+</html>
