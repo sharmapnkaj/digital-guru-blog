@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SEOGuru">
 <link rel="manifest" href="manifest.json">
-<title>SEO Guru — Digital Marketing Blog</title>
+<title>Digital Guru — Digital Marketing Blog</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -20,20 +20,33 @@
     --bg: #FFFFFF; --text: #2D3748; --card-bg: #FFFFFF;
     --card-border: #E2E8F0; --section-bg: #F7F8FC;
   }
-  [data-theme="dark"] {
-    --bg: #0D1117; --text: #E6EDF3; --card-bg: #161B22;
-    --card-border: #30363D; --section-bg: #161B22;
-    --grey-dark: #E6EDF3; --grey-mid: #8B949E; --grey-light: #161B22;
-    --white: #0D1117; --border: #30363D; --sky: #1C2333;
-  }
-  body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
-  body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--grey-dark); }
+  body { font-family: 'Inter', sans-serif; background: #FFFFFF; color: #2D3748; transition: background 0.3s, color 0.3s; }
+  body.dark { background: #0D1117 !important; color: #E6EDF3 !important; }
+  body.dark .page { background: #0D1117 !important; }
+  body.dark .section { background: #0D1117 !important; }
+  .dark .post-card, .dark .blog-list-card, .dark .sidebar-card,
+  .dark .contact-form-box, .dark .cat-card, .dark .skill-item,
+  .dark .post-modal-box, .dark .login-box, .dark .admin-panel-box,
+  .dark .ap-post-row { background: #161B22 !important; border-color: #30363D !important; }
+  .dark h1,.dark h2,.dark h3,.dark h4,.dark p,.dark span,
+  .dark .section-title,.dark .cat-name,.dark .post-card h3,
+  .dark .blog-list-body h3,.dark .blog-list-body p,
+  .dark .post-card p { color: #E6EDF3 !important; }
+  .dark .categories-section, .dark #page-home { background: #0D1117 !important; }
+  .dark .form-group input,.dark .form-group textarea,.dark .form-group select,
+  .dark .ap-form input,.dark .ap-form textarea,.dark .ap-form select { background: #0D1117 !important; color: #E6EDF3 !important; border-color: #30363D !important; }
+  .dark .filter-btn { background: #161B22 !important; color: #8B949E !important; border-color: #30363D !important; }
+  .dark .filter-btn.active { background: #1B4FD8 !important; color: white !important; }
+  .dark .ap-stat-card { background: #0D1117 !important; }
+  .dark .post-meta span, .dark .blog-list-meta span { color: #8B949E !important; }
+  .dark .cat-count, .dark .about-text p { color: #8B949E !important; }
+
 
   /* NAV */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 64px; box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: var(--navy); display: grid; grid-template-columns: auto 1fr auto; align-items: center; padding: 0 5%; height: 64px; box-shadow: 0 2px 20px rgba(0,0,0,0.3); gap: 1rem; }
   .logo { color: var(--white); font-size: 1.4rem; font-weight: 800; cursor: pointer; }
   .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; justify-content: center; }
   .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: color 0.2s; }
   .nav-links a:hover, .nav-links a.active { color: white; }
   .nav-right { display: flex; gap: 0.6rem; align-items: center; }
@@ -98,8 +111,8 @@
 
   /* CATEGORIES */
   .categories-section { background: var(--grey-light); padding: 60px 5%; }
-  .cats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-top: 2rem; }
-  .cat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 1.2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .cats-grid { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; justify-content: center; }
+  .cat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 1.2rem; text-align: center; cursor: pointer; transition: all 0.2s; width: 180px; }
   .cat-card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(27,79,216,0.1); }
   .cat-icon { font-size: 2rem; margin-bottom: 0.7rem; }
   .cat-name { font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: 0.3rem; }
@@ -297,7 +310,19 @@
 
 <!-- NAVBAR -->
 <nav>
-  <div class="logo" onclick="showPage('home')">SEO<span>Guru</span></div>
+  <div class="logo" onclick="showPage('home')" style="display:flex;align-items:center;cursor:pointer"><svg width="140" height="40" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="36" cy="40" r="32" fill="#1B4FD8"/>
+  <circle cx="36" cy="40" r="23" fill="#0F1F3D"/>
+  <text x="36" y="47" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">DG</text>
+  <line x1="20" y1="18" x2="10" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="36" y1="13" x2="36" y2="3" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="52" y1="18" x2="62" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="9" cy="7" r="3" fill="#FF6B35"/>
+  <circle cx="36" cy="2" r="3" fill="#FF6B35"/>
+  <circle cx="63" cy="7" r="3" fill="#FF6B35"/>
+  <text x="78" y="34" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FFFFFF">Digital</text>
+  <text x="78" y="56" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">Guru</text>
+</svg></div>
   <ul class="nav-links">
     <li><a onclick="showPage('home')" id="nav-home" class="active">🏠 Home</a></li>
     <li><a onclick="showPage('blog')" id="nav-blog">📝 Blog</a></li>
@@ -383,7 +408,7 @@
 <div class="page active" id="page-home">
   <section class="hero">
     <div class="hero-inner">
-      <div class="hero-badge">🚀 Hindi में SEO सीखो</div>
+      <div class="hero-badge">🚀 Hindi में Digital Marketing सीखो</div>
       <h1>Digital Marketing की<br><span>दुनिया में आगे</span> बढ़ो</h1>
       <p>SEO, Content Marketing, Social Media और Email Marketing — सब कुछ आसान Hindi भाषा में सीखो।</p>
       <div class="hero-btns">
@@ -428,7 +453,19 @@
   <footer>
     <div class="footer-grid">
       <div class="footer-brand">
-  <span class="logo">SEO<span style="color:var(--accent)">Guru</span></span>
+  <span style="display:inline-block"><svg width="140" height="40" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="36" cy="40" r="32" fill="#1B4FD8"/>
+  <circle cx="36" cy="40" r="23" fill="#0F1F3D"/>
+  <text x="36" y="47" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">DG</text>
+  <line x1="20" y1="18" x2="10" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="36" y1="13" x2="36" y2="3" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="52" y1="18" x2="62" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="9" cy="7" r="3" fill="#FF6B35"/>
+  <circle cx="36" cy="2" r="3" fill="#FF6B35"/>
+  <circle cx="63" cy="7" r="3" fill="#FF6B35"/>
+  <text x="78" y="34" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FFFFFF">Digital</text>
+  <text x="78" y="56" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">Guru</text>
+</svg></span>
   <p>Hindi में Digital Marketing सीखने की सबसे अच्छी जगह।</p>
   <div style="display:flex;gap:0.8rem;margin-top:1rem">
     <a href="https://www.instagram.com/css_toot_gya?utm_source=qr&igsh=bDNpbDFoZWp0emg5" target="_blank" style="display:flex;align-items:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
@@ -494,7 +531,19 @@
   <footer>
     <div class="footer-grid">
       <div class="footer-brand">
-  <span class="logo">SEO<span style="color:var(--accent)">Guru</span></span>
+  <span style="display:inline-block"><svg width="140" height="40" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="36" cy="40" r="32" fill="#1B4FD8"/>
+  <circle cx="36" cy="40" r="23" fill="#0F1F3D"/>
+  <text x="36" y="47" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">DG</text>
+  <line x1="20" y1="18" x2="10" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="36" y1="13" x2="36" y2="3" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="52" y1="18" x2="62" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="9" cy="7" r="3" fill="#FF6B35"/>
+  <circle cx="36" cy="2" r="3" fill="#FF6B35"/>
+  <circle cx="63" cy="7" r="3" fill="#FF6B35"/>
+  <text x="78" y="34" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FFFFFF">Digital</text>
+  <text x="78" y="56" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">Guru</text>
+</svg></span>
   <p>Hindi में Digital Marketing सीखने की सबसे अच्छी जगह।</p>
   <div style="display:flex;gap:0.8rem;margin-top:1rem">
     <a href="https://www.instagram.com/css_toot_gya?utm_source=qr&igsh=bDNpbDFoZWp0emg5" target="_blank" style="display:flex;align-items:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
@@ -541,7 +590,19 @@
   <footer>
     <div class="footer-grid">
       <div class="footer-brand">
-  <span class="logo">SEO<span style="color:var(--accent)">Guru</span></span>
+  <span style="display:inline-block"><svg width="140" height="40" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="36" cy="40" r="32" fill="#1B4FD8"/>
+  <circle cx="36" cy="40" r="23" fill="#0F1F3D"/>
+  <text x="36" y="47" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">DG</text>
+  <line x1="20" y1="18" x2="10" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="36" y1="13" x2="36" y2="3" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="52" y1="18" x2="62" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="9" cy="7" r="3" fill="#FF6B35"/>
+  <circle cx="36" cy="2" r="3" fill="#FF6B35"/>
+  <circle cx="63" cy="7" r="3" fill="#FF6B35"/>
+  <text x="78" y="34" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FFFFFF">Digital</text>
+  <text x="78" y="56" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">Guru</text>
+</svg></span>
   <p>Hindi में Digital Marketing सीखने की सबसे अच्छी जगह।</p>
   <div style="display:flex;gap:0.8rem;margin-top:1rem">
     <a href="https://www.instagram.com/css_toot_gya?utm_source=qr&igsh=bDNpbDFoZWp0emg5" target="_blank" style="display:flex;align-items:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
@@ -585,7 +646,19 @@
   <footer>
     <div class="footer-grid">
       <div class="footer-brand">
-  <span class="logo">SEO<span style="color:var(--accent)">Guru</span></span>
+  <span style="display:inline-block"><svg width="140" height="40" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="36" cy="40" r="32" fill="#1B4FD8"/>
+  <circle cx="36" cy="40" r="23" fill="#0F1F3D"/>
+  <text x="36" y="47" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">DG</text>
+  <line x1="20" y1="18" x2="10" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="36" y1="13" x2="36" y2="3" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <line x1="52" y1="18" x2="62" y2="8" stroke="#FF6B35" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="9" cy="7" r="3" fill="#FF6B35"/>
+  <circle cx="36" cy="2" r="3" fill="#FF6B35"/>
+  <circle cx="63" cy="7" r="3" fill="#FF6B35"/>
+  <text x="78" y="34" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FFFFFF">Digital</text>
+  <text x="78" y="56" font-family="Inter,sans-serif" font-size="18" font-weight="800" fill="#FF6B35">Guru</text>
+</svg></span>
   <p>Hindi में Digital Marketing सीखने की सबसे अच्छी जगह।</p>
   <div style="display:flex;gap:0.8rem;margin-top:1rem">
     <a href="https://www.instagram.com/css_toot_gya?utm_source=qr&igsh=bDNpbDFoZWp0emg5" target="_blank" style="display:flex;align-items:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;padding:8px 14px;border-radius:8px;font-size:0.82rem;font-weight:600;text-decoration:none">
@@ -617,6 +690,29 @@
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
+// ═══ DARK MODE ═══
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  document.getElementById('darkBtn').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('seoguru_theme', isDark ? 'dark' : 'light');
+}
+
+function initTheme() {
+  if (localStorage.getItem('seoguru_theme') === 'dark') {
+    document.body.classList.add('dark');
+    const btn = document.getElementById('darkBtn');
+    if (btn) btn.textContent = '☀️';
+  }
+}
+
+// Run immediately when script loads
+(function() {
+  if (localStorage.getItem('seoguru_theme') === 'dark') {
+    document.body.classList.add('dark');
+  }
+})();
+
 // ═══════════════════════════════════
 // SUPABASE CONFIG
 // ═══════════════════════════════════
