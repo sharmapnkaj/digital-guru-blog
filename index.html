@@ -213,6 +213,26 @@
   .footer-col ul li a:hover { color: white; }
   .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; }
 
+  /* NEWSLETTER POPUP */
+  .nl-popup { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 4000; align-items: center; justify-content: center; padding: 1rem; }
+  .nl-popup.open { display: flex; }
+  .nl-box { background: white; border-radius: 20px; width: 100%; max-width: 480px; overflow: hidden; position: relative; }
+  .nl-top { background: linear-gradient(135deg, #0F1F3D, #1B4FD8); padding: 2.5rem 2rem 2rem; text-align: center; }
+  .nl-top .nl-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .nl-top h2 { color: white; font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .nl-top p { color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.6; }
+  .nl-body { padding: 1.8rem 2rem; }
+  .nl-body input { width: 100%; padding: 13px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.95rem; font-family: inherit; outline: none; margin-bottom: 0.8rem; }
+  .nl-body input:focus { border-color: var(--blue); }
+  .nl-sub-btn { width: 100%; background: var(--accent); color: white; padding: 13px; border-radius: 10px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; transition: opacity 0.2s; }
+  .nl-sub-btn:hover { opacity: 0.9; }
+  .nl-close { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.2); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; }
+  .nl-skip { display: block; text-align: center; margin-top: 0.8rem; color: var(--grey-mid); font-size: 0.82rem; cursor: pointer; }
+  .nl-skip:hover { color: var(--blue); }
+  .nl-success { display: none; text-align: center; padding: 1rem 0; }
+  .nl-success div { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .nl-success p { color: var(--green); font-weight: 700; font-size: 1rem; }
+
   /* SCROLL TOP */
   .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; background: var(--blue); color: white; border: none; border-radius: 50%; font-size: 1.1rem; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(27,79,216,0.4); z-index: 100; }
   .scroll-top.show { display: flex; }
@@ -342,6 +362,31 @@
   <a onclick="showPage('blog');toggleMenu()">📝 Blog</a>
   <a onclick="showPage('about');toggleMenu()">👤 About</a>
   <a onclick="showPage('contact');toggleMenu()">📧 Contact</a>
+</div>
+
+<!-- NEWSLETTER POPUP -->
+<div class="nl-popup" id="nlPopup">
+  <div class="nl-box">
+    <button class="nl-close" onclick="closeNewsletter()">✕</button>
+    <div class="nl-top">
+      <div class="nl-icon">📧</div>
+      <h2>Free SEO Tips पाओ!</h2>
+      <p>हर हफ्ते inbox में नई Digital Marketing tips — बिल्कुल Free! 10,000+ readers पहले से जुड़े हैं।</p>
+    </div>
+    <div class="nl-body">
+      <div id="nlForm">
+        <input type="text" id="nlName" placeholder="तुम्हारा नाम">
+        <input type="email" id="nlEmail" placeholder="तुम्हारी Email *" required>
+        <button class="nl-sub-btn" onclick="subscribeNewsletter()">🚀 Subscribe करो — Free!</button>
+        <span class="nl-skip" onclick="closeNewsletter()">अभी नहीं, बाद में</span>
+      </div>
+      <div class="nl-success" id="nlSuccess">
+        <div>🎉</div>
+        <p>Subscribe हो गए!</p>
+        <p style="color:var(--grey-mid);font-size:0.85rem;margin-top:0.3rem">जल्द ही पहली email आएगी।</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ADMIN OVERLAY -->
@@ -641,6 +686,7 @@
       <div class="form-group"><label>Message *</label><textarea id="cMsg" placeholder="अपना message लिखो..."></textarea></div>
       <button class="form-submit" onclick="submitContact()">Message भेजो 🚀</button>
       <div class="success-msg" id="contactSuccess">✅ Message मिल गया! जल्द reply करेंगे।</div>
+      <div id="contactError" style="display:none;background:#FEE2E2;color:#DC2626;padding:12px 16px;border-radius:8px;font-size:0.9rem;font-weight:600;margin-top:1rem;text-align:center">❌ कुछ गलत हुआ। फिर try करो।</div>
     </div>
   </div>
   <footer>
@@ -967,17 +1013,80 @@ function subNewsletter(inputId, msgId) {
   }
 }
 
-function submitContact() {
-  const n = document.getElementById('cName').value;
-  const e = document.getElementById('cEmail').value;
-  const m = document.getElementById('cMsg').value;
-  if (n && e && m) {
-    document.getElementById('contactSuccess').style.display = 'block';
-    document.getElementById('cName').value = '';
-    document.getElementById('cEmail').value = '';
-    document.getElementById('cMsg').value = '';
-  } else { alert('कृपया सभी fields भरें।'); }
+async function submitContact() {
+  const n = document.getElementById('cName').value.trim();
+  const e = document.getElementById('cEmail').value.trim();
+  const t = document.getElementById('cTopic').value;
+  const m = document.getElementById('cMsg').value.trim();
+  
+  if (!n || !e || !m) { alert('कृपया सभी fields भरें।'); return; }
+  
+  const btn = document.querySelector('.form-submit');
+  btn.disabled = true;
+  btn.textContent = '⏳ भेज रहे हैं...';
+  document.getElementById('contactSuccess').style.display = 'none';
+  document.getElementById('contactError').style.display = 'none';
+  
+  try {
+    const res = await fetch('https://formspree.io/f/xykqgpnr', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name: n, email: e, topic: t, message: m })
+    });
+    
+    if (res.ok) {
+      document.getElementById('contactSuccess').style.display = 'block';
+      document.getElementById('cName').value = '';
+      document.getElementById('cEmail').value = '';
+      document.getElementById('cMsg').value = '';
+    } else {
+      document.getElementById('contactError').style.display = 'block';
+    }
+  } catch(err) {
+    document.getElementById('contactError').style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Message भेजो 🚀';
+  }
 }
+
+// ═══ NEWSLETTER POPUP ═══
+function showNewsletterPopup() {
+  if (!localStorage.getItem('nl_subscribed') && !localStorage.getItem('nl_dismissed')) {
+    setTimeout(() => {
+      document.getElementById('nlPopup').classList.add('open');
+    }, 8000); // 8 seconds बाद दिखेगा
+  }
+}
+
+function closeNewsletter() {
+  document.getElementById('nlPopup').classList.remove('open');
+  localStorage.setItem('nl_dismissed', 'true');
+}
+
+async function subscribeNewsletter() {
+  const email = document.getElementById('nlEmail').value.trim();
+  const name = document.getElementById('nlName').value.trim();
+  if (!email) { alert('Email जरूर डालो!'); return; }
+  
+  try {
+    await fetch('https://formspree.io/f/xykqgpnr', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name: name || 'Subscriber', email, type: 'Newsletter Subscription' })
+    });
+  } catch(e) {}
+  
+  document.getElementById('nlForm').style.display = 'none';
+  document.getElementById('nlSuccess').style.display = 'block';
+  localStorage.setItem('nl_subscribed', 'true');
+  setTimeout(() => closeNewsletter(), 3000);
+}
+
+// Close popup on outside click
+document.getElementById('nlPopup').addEventListener('click', function(e) {
+  if (e.target === this) closeNewsletter();
+});
 
 window.addEventListener('scroll', () => {
   document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 300);
@@ -1000,6 +1109,7 @@ document.querySelector('.logo').addEventListener('click', function() {
 initTheme();
 loadHomeGrid();
 updateCounts();
+showNewsletterPopup();
 </script>
 </body>
 </html>
